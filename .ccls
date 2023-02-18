@@ -6,4 +6,4 @@ clang++
 %h c++-header
 
 -I
-./backward-cpp
+./learn-backtrace-cpp/backward-cpp
