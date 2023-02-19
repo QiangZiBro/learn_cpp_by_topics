@@ -69,3 +69,52 @@ Segmentation fault (Address not mapped to object [0x190])
 
 checklist if such info doesn't show up:
 - `set(CMAKE_BUILD_TYPE Debug)` in [CMakeLists.txt](./CMakeLists.txt) 
+
+## Tips on debugging
+```
+root@c4b58d486504:/work/cmake_example# gdb --args python3 test.py
+GNU gdb (Ubuntu 12.1-3ubuntu2) 12.1
+Copyright (C) 2022 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "aarch64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from python3...
+(No debugging symbols found in python3)
+(gdb) b package/src/op.cc:6
+No symbol table is loaded.  Use the "file" command.
+Make breakpoint pending on future shared library load? (y or [n]) y
+Breakpoint 1 (package/src/op.cc:6) pending.
+(gdb) start
+Function "main" not defined.
+Make breakpoint pending on future shared library load? (y or [n]) y
+Temporary breakpoint 2 (-qualified main) pending.
+Starting program: /usr/bin/python3 test.py
+warning: Error disabling address space randomization: Operation not permitted
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/aarch64-linux-gnu/libthread_db.so.1".
+
+Breakpoint 1, set (n=100) at /work/cmake_example/package/src/op.cc:6
+6		std::vector<int> A;
+(gdb) n
+7		A[n] = -1;
+(gdb) p A
+$1 = std::vector of length 0, capacity 0
+(gdb) n
+
+Program received signal SIGSEGV, Segmentation fault.
+0x0000ffff81811574 in set (n=100) at /work/cmake_example/package/src/op.cc:7
+7		A[n] = -1;
+(gdb) n
+backward::SignalHandling::sig_handler (signo=0, info=0x0, _ctx=0x0) at /work/cmake_example/backward-cpp/backward.hpp:4294
+4294	  sig_handler(int signo, siginfo_t *info, void *_ctx) {
+```
