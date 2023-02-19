@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!jusr/bin/env bash
 
 set -e
 rm -rf build
