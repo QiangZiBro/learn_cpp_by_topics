@@ -1,3 +1,0 @@
-[submodule "learn-backtrace-cpp/backward-cpp"]
-	path = learn-backtrace-cpp/backward-cpp
-	url = https://github.com/bombela/backward-cpp
